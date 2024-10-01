@@ -4,6 +4,7 @@ import os
 import tifffile as tiff
 import numpy as np
 
+
 def tiff_to_memmap(path_to_tiff, path_for_memmap, channel, chunk_size, suffix = '.tif', data_type = 'float32') -> None:
 
     '''
@@ -60,5 +61,21 @@ def tiff_to_memmap(path_to_tiff, path_for_memmap, channel, chunk_size, suffix = 
                     print(f"Processed frames {i} to {end_frame} from {tiff_filename}")
         print('\n')
 
-    npy_memmap.flush()
-    
+    npy_memmap.flush() # ensure everything is written to disk
+
+
+
+def create_memmap_multichannel(path_to_directory, chunk_size, numpy_folder_name='numpy', suffix = '.tif', data_type = 'float32'):
+
+    '''
+    create a .npy memmap file for each channel folder in a given directory. Creates a new numpy folder in the directory
+    '''
+
+    numpy_folder = os.path.join(path_to_directory, numpy_folder_name)
+
+    folders = [name for name in os.listdir(path_to_directory) if os.path.isdir(os.path.join(path_to_directory, name))]
+
+    for folder in folders:
+        path_to_tiff = os.path.join(path_to_directory, folder)
+        tiff_to_memmap(path_to_tiff, numpy_folder, channel=folder, chunk_size=chunk_size, suffix=suffix, data_type=data_type)
+
