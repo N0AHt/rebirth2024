@@ -1,5 +1,9 @@
 #TODO : Create a check to see if the .npy file already exists. If so this will throw an error
 
+import os
+import tifffile as tiff
+import numpy as np
+
 def tiff_to_memmap(path_to_tiff, path_for_memmap, channel, chunk_size, suffix = '.tif', data_type = 'float32') -> None:
 
     '''
@@ -31,9 +35,9 @@ def tiff_to_memmap(path_to_tiff, path_for_memmap, channel, chunk_size, suffix = 
     # Second pass: Load TIFF stacks in chunks and write to the .npy memmap file
     current_frame = 0  # Tracks the position in the memmap array
 
-    for tiff_filename in os.listdir(tiff_folder):
+    for tiff_filename in os.listdir(path_to_tiff):
         if tiff_filename.endswith(suffix):
-            tiff_path = os.path.join(tiff_folder, tiff_filename)
+            tiff_path = os.path.join(path_to_tiff, tiff_filename)
 
             # Load and convert the TIFF stack in chunks
             with tiff.TiffFile(tiff_path) as tif:
@@ -54,4 +58,7 @@ def tiff_to_memmap(path_to_tiff, path_for_memmap, channel, chunk_size, suffix = 
                     current_frame += chunk.shape[0]  # Update the frame position
 
                     print(f"Processed frames {i} to {end_frame} from {tiff_filename}")
+        print('\n')
+
     npy_memmap.flush()
+    
