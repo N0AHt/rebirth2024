@@ -3,13 +3,14 @@
 import os
 import tifffile as tiff
 import numpy as np
+import json
 
 
 def tiff_to_memmap(path_to_tiff, path_for_memmap, channel, chunk_size, suffix = '.tif', data_type = 'float32') -> None:
 
     '''
     Automatic conversion from large tif datasets to .npy memmaped arrays that allow dynamic loading and chunking to avoid
-    memory issues. GPT generated.
+    memory issues.
     '''
 
     os.makedirs(path_for_memmap, exist_ok=True) #ensure folder exists, create it if not
@@ -28,9 +29,16 @@ def tiff_to_memmap(path_to_tiff, path_for_memmap, channel, chunk_size, suffix = 
                     frame_shape = tif.pages[0].shape  # Get shape of the first frame
 
     # create the memmap file for the entire output, for the channel used
-    npy_filename = channel + '.npy'
+    npy_filename = channel + '.npy' #saving as .npy means the metadata will be contained in the file - can load without specifying later
     npy_path = os.path.join(path_for_memmap, npy_filename)
     npy_memmap = np.memmap(npy_path, dtype=data_type, mode='w+', shape=(total_frames, *frame_shape))
+
+    #save metadate for future loading
+    metadata = {'data_type' : data_type, 'shape' : (total_frames, *frame_shape)}
+    metadata_filename = channel + '_meta' + '.json'
+    metadata_path = os.path.join(path_for_memmap, metadata_filename)
+    with open(metadata_path, 'w') as f: 
+        json.dump(metadata, f)
 
 
     # Second pass: Load TIFF stacks in chunks and write to the .npy memmap file
@@ -79,3 +87,15 @@ def create_memmap_multichannel(path_to_directory, chunk_size, numpy_folder_name=
         path_to_tiff = os.path.join(path_to_directory, folder)
         tiff_to_memmap(path_to_tiff, numpy_folder, channel=folder, chunk_size=chunk_size, suffix=suffix, data_type=data_type)
 
+
+
+# Loading memmmaps utilities
+
+def open_memmap(path_to_memmap, path_to_metadata):
+
+    with open(path_to_metadata, 'r') as f:
+        metadata = json.load(f)
+    
+    data = np.memmap( path_to_memmap, dtype = metadata['data_type'], mode='r', shape = tuple(metadata['shape']) )
+
+    return data
