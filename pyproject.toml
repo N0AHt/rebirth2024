@@ -1,0 +1,26 @@
+[build-system]
+requires = ["pysetuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "rebirth"
+version = "0.1"
+description = "Code for analysing and processing Hydra reaggregation data"
+readme = "README.md"
+requires-python = ">=3.12"
+
+# dependencies = [
+#     "numpy",
+#     "matplotlib",
+#     "opencv-python",
+#     "tifffile"
+# ]
+
+
+[project.urls]
+repository = "https://github.com/N0AHt/rebirth2024"
+
+
+[tool.setuptools.packages.find]
+where = ["rebirth"]
