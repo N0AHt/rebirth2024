@@ -9,13 +9,9 @@ def cv_play(data, window_name = None, scale = 1):
     display all frames in the array in an interactive plot window from openCV2
     '''
 
-    # global frameID
-    # global frame
-
     frameID = 0
     frame = data[frameID].copy()
     h, w = frame.shape[0:2]
-
 
     if window_name:
         window_name = window_name
@@ -39,14 +35,16 @@ def cv_play(data, window_name = None, scale = 1):
     while True:
 
         try:
+            # Process and display a Frame
             frameID = cv.getTrackbarPos('Frame',window_name)
-            frame = (data[frameID] * 255).astype(np.uint8)
-
-            # #process frame here
-            # frame = cv.normalize(src=frame, dst=None, alpha=0, beta=255, norm_type=cv.NORM_MINMAX, dtype=cv.CV_8U)
+            frame = data[frameID]
+            
+            #process frame here
+            frame = cv.normalize(frame, None, 0, 255, cv.NORM_MINMAX, dtype=cv.CV_8U) # convert from uint16 to uint8 for display with openCV
             # frame = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
 
             cv.imshow(window_name, frame)
+
 
             # Handle key events for navigation
             key = cv.waitKey(5)
