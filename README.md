@@ -25,7 +25,7 @@ $ mamba activate rebirth
 Install the package and requirements
 ```
 $ pip install -e . # Install in editable mode for now
-$ mamba install --file requirements.txt
+$ pip install -r requirements.txt
 ```
 
 ---
