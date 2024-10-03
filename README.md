@@ -3,7 +3,6 @@
 Cell tracking, calcium signal processing, and analysis of regeneration of
 ensembles.
 
----
 
 ## Installation
 
@@ -18,7 +17,7 @@ $ cd <repo>
 
 Create a new mamba environment and install python
 ```
-$ mamba create -n rebirth python # env will be called rebirth
+$ mamba create -n rebirth python, ipykernel # env will be called rebirth. Add ipykernel if using jupyter notebooks
 $ mamba activate rebirth
 ```
 
@@ -28,7 +27,6 @@ $ pip install -e . # Install in editable mode for now
 $ pip install -r requirements.txt
 ```
 
----
 
 ## Usage
 

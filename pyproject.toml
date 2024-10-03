@@ -27,4 +27,4 @@ repository = "https://github.com/N0AHt/rebirth2024"
 
 
 [tool.setuptools.packages.find]
-where = ["rebirth"]
+include = ['rebirth']
