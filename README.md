@@ -33,4 +33,4 @@ $ pip install -r requirements.txt
 - Notebooks for loading multiple tiff stacks and creating a memmap file from them
 - Notebooks for loading these memmap files and visualising the data
 - Notebooks for tracking the tdTomato labelled cells
-- Notebooks for using the trakced tdTomato
+- Notebooks for using the tracked tdTomato

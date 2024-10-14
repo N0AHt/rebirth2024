@@ -166,3 +166,7 @@ cython_debug/
 
 # vscode
 *.code-workspace
+
+
+# Deep learning models should not be committed
+models/
