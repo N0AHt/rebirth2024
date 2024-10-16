@@ -58,7 +58,7 @@ def tiff_to_memmap(path_to_tiff, path_for_memmap, channel, chunk_size, suffix = 
                 num_frames = len(tif.pages)
 
                 for i in range(0, num_frames, chunk_size):
-                    end_frame = min(i + chunk_size, num_frames) # this is clever, gpt
+                    end_frame = min(i + chunk_size, num_frames)
 
                     # Read only the current chunk from the TIFF file
                     try:
@@ -72,16 +72,16 @@ def tiff_to_memmap(path_to_tiff, path_for_memmap, channel, chunk_size, suffix = 
                     current_frame += chunk.shape[0]  # Update the frame position
 
 
-                    # NOTE: When averaging averages, a weighted sum of averages must be used (weighted by chuck size). Since these chunks are mostly the same size I'm ignoring this
+                    # NOTE: When averaging averages, a weighted sum of averages must be used (weighted by chunk size). Since these chunks are mostly the same size I'm ignoring this
                     if collect_image_metadata:
                         if image_statistics == None:
                             image_statistics = {'mean' : chunk.mean(), 'min' : chunk.min(), 'max' : chunk.max(), 'bottom_quantile' : np.quantile(chunk, 0.005), 'top_quantile' : np.quantile(chunk, 0.999)}
                         else:
-                            image_statistics['mean'] = np.mean( (chunk.mean() + image_statistics['mean']) )
-                            image_statistics['min'] = np.min( (chunk.min() , image_statistics['min']) )
-                            image_statistics['max'] = np.max( (chunk.max() , image_statistics['max']) )
-                            image_statistics['bottom_quantile'] = np.mean( (np.quantile(chunk, 0.005) , image_statistics['bottom_quantile']) )
-                            image_statistics['top_quantile'] = np.mean( (np.quantile(chunk, 0.999) , image_statistics['top_quantile']) )
+                            image_statistics['mean'] = np.mean( (chunk.mean() , image_statistics['mean']) ).item()
+                            image_statistics['min'] = np.min( (chunk.min() , image_statistics['min']) ).item()
+                            image_statistics['max'] = np.max( (chunk.max() , image_statistics['max']) ).item()
+                            image_statistics['bottom_quantile'] = np.mean( (np.quantile(chunk, 0.005) , image_statistics['bottom_quantile']) ).item()
+                            image_statistics['top_quantile'] = np.mean( (np.quantile(chunk, 0.999) , image_statistics['top_quantile']) ).item()
                                                                                                           
 
                     print(f"Processed frames {i} to {end_frame} from {tiff_filename}")
@@ -90,8 +90,10 @@ def tiff_to_memmap(path_to_tiff, path_for_memmap, channel, chunk_size, suffix = 
     npy_memmap.flush() # ensure everything is written to disk
 
     #save metadata for future loading
+    # metadata = {'data_type' : data_type, 'shape' : (total_frames, *frame_shape)
+    #             , 'original_image_metadata' : original_image_metadata, 'image_statistics' : image_statistics}
     metadata = {'data_type' : data_type, 'shape' : (total_frames, *frame_shape)
-                , 'original_image_metadata' : original_image_metadata, 'image_statistics' : image_statistics}
+                , 'image_statistics' : image_statistics}
     metadata_filename = channel + '_meta' + '.json'
     metadata_path = os.path.join(path_for_memmap, metadata_filename)
     with open(metadata_path, 'w') as f: 
