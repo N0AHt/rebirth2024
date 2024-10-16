@@ -7,7 +7,7 @@ import json
 
 
 def tiff_to_memmap(path_to_tiff, path_for_memmap, channel, chunk_size, suffix = '.tif', data_type = 'uint16'
-                   , collect_image_metadata = False) -> None:
+                   , collect_image_statistics = False) -> None:
 
     '''
     Automatic conversion from large tif datasets to .npy memmapped arrays that allow dynamic loading and chunking to avoid
@@ -73,7 +73,7 @@ def tiff_to_memmap(path_to_tiff, path_for_memmap, channel, chunk_size, suffix = 
 
 
                     # NOTE: When averaging averages, a weighted sum of averages must be used (weighted by chunk size). Since these chunks are mostly the same size I'm ignoring this
-                    if collect_image_metadata:
+                    if collect_image_statistics:
                         if image_statistics == None:
                             image_statistics = {'mean' : chunk.mean(), 'min' : chunk.min(), 'max' : chunk.max(), 'bottom_quantile' : np.quantile(chunk, 0.005), 'top_quantile' : np.quantile(chunk, 0.999)}
                         else:
