@@ -33,9 +33,14 @@ class stardist():
 
 
 # preprocessing data for use with stardist
-def normaliser(video):
+
+# TODO: Fix this normaliser. if I try to use the metadata file it is useless. Maybe something here is broken
+def normalizer(video):
     video = np.copy(video)
     vidType = video.dtype
+    # type_string = getattr(np, vidType)
+    # mini = int(min_quantile)
+    # maxi = int(max_quantile)
     mini = np.quantile(video, 0.005).astype(vidType)
     maxi = np.quantile(video, 0.999).astype(vidType)
 
@@ -45,7 +50,7 @@ def normaliser(video):
 
 
 
-# countour plotting functions:
+# contour plotting functions:
 
 def coordReshaper_CV_contours(coords):
 

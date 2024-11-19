@@ -77,7 +77,7 @@ def tiff_to_memmap(path_to_tiff, path_for_memmap, channel, chunk_size, suffix = 
                         if image_statistics == None:
                             image_statistics = {'mean' : chunk.mean(), 'min' : chunk.min(), 'max' : chunk.max(), 'bottom_quantile' : np.quantile(chunk, 0.005), 'top_quantile' : np.quantile(chunk, 0.999)}
                         else:
-                            image_statistics['mean'] = np.mean( (chunk.mean() , image_statistics['mean']) ).item()
+                            image_statistics['mean'] = np.mean( (chunk.mean() , image_statistics['mean']) ).item() # JSON can't store numpy type (such as int16) These need converted to the nearest python standard type
                             image_statistics['min'] = np.min( (chunk.min() , image_statistics['min']) ).item()
                             image_statistics['max'] = np.max( (chunk.max() , image_statistics['max']) ).item()
                             image_statistics['bottom_quantile'] = np.mean( (np.quantile(chunk, 0.005) , image_statistics['bottom_quantile']) ).item()
@@ -127,3 +127,14 @@ def open_memmap(path_to_memmap, path_to_metadata):
     data = np.memmap( path_to_memmap, dtype = metadata['data_type'], mode='r', shape = tuple(metadata['shape']) )
 
     return data
+
+
+def open_metadata(path_to_metadata, field_name = None):
+
+    with open(path_to_metadata, 'r') as f:
+        metadata = json.load(f)
+
+    if field_name:
+        return metadata[field_name]
+    else:
+        return metadata
