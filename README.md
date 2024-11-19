@@ -10,7 +10,7 @@ To install this into a new mamba env:
 
 First clone the github repo and navigate into it 
 ```
-$ cd <directory_when_repo_will_be_cloned> # i.e. desktop or github, wherever you want the code to be
+$ cd <directory_where_repo_will_be_cloned> # i.e. desktop or github, wherever you want the code to be
 $ git clone <repo_url> # clone repo
 $ cd <repo>
 ```
